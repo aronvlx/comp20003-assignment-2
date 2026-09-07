@@ -5,6 +5,7 @@
 
 #include "list.h"
 #include "data.h"
+#include "patricia.h"
 
 #define INIT_MATCH_CAP 2
 

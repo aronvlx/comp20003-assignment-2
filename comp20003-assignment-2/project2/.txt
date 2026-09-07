@@ -1,0 +1,3 @@
+Modify search.c,.h to accomodate patricia tree traversal
+Build patricia.c,.h
+Modify main.c to accept stage 2 and build tree

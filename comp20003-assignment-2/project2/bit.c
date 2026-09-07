@@ -46,3 +46,38 @@ int compareBits(char *a, char *b, unsigned long *compCount) {
         i++;
     }
 }
+
+/* Allocates new memory to hold the numBits specified and fills the allocated
+    memory with the numBits specified starting from the startBit of the oldKey
+    array of bytes. */
+char *createStem(char *oldKey, unsigned int startBit, unsigned int numBits){
+    assert(oldKey);
+    /* Calculate whether any additional bytes are needed to store the stem due
+        to not fitting exactly in a byte. */
+    int extraBytes = 0;
+    if((numBits % BITS_PER_BYTE) > 0){
+        extraBytes = 1;
+    }
+    int totalBytes = (numBits / BITS_PER_BYTE) + extraBytes;
+    char *newStem = malloc(sizeof(char) * totalBytes);
+    assert(newStem);
+    /* Zero all values in stem initially, so that OR operation is well 
+        defined. */
+    for(unsigned int i = 0; i < totalBytes; i++){
+        newStem[i] = 0;
+    }
+    /* For each bit, follow getBit logic to find the location to insert the bit 
+        and add the bit to the new stem. */
+    for(unsigned int i = 0; i < numBits; i++){
+        /* Calculate a mask for the bit to add to the stem */
+        unsigned int indexFromLeft = i % BITS_PER_BYTE;
+        unsigned int offset = (BITS_PER_BYTE - indexFromLeft - 1) % BITS_PER_BYTE;
+        unsigned int bitMaskForPosition = 1 << offset;
+        unsigned int bitValueAtPosition = getBit(oldKey, startBit + i);
+        /* Calculate the byte which the new bit will be placed in. */
+        unsigned int byteInNewStem = i / BITS_PER_BYTE;
+        /* Add 0 or 1 to the stem at the appropriate bit. */
+        newStem[byteInNewStem] |= bitMaskForPosition * bitValueAtPosition;
+    }
+    return newStem;
+}
