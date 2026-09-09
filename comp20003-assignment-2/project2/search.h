@@ -26,4 +26,6 @@ searchResult_t *searchKey(list_t *list, char *key);
 /* frees a search rsult and array, maintaining matched records in the list */
 void freeResult(searchResult_t *result);
 
+void searchPatricia(patricia_tree_t *tree, const char *query, FILE *outFile);
+
 #endif /* _SEARCH_H_ */
